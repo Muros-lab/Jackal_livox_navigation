@@ -28,8 +28,8 @@ git clone https://github.com/Muros-lab/Jackal_livox_navigation
 
 ```
 install Dependencies
-'''bash
-'''
+```bash
+```
 
 ## How to run
 **0. add your 2D map in maps file**  
