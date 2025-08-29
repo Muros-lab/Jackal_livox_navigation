@@ -9,9 +9,13 @@ https://wiki.ros.org/noetic/Installation/Ubuntu
 
 **We used Livox MID-360 LiDAR sensor**  
 **must install livox ros driver**  
-https://github.com/Livox-SDK/livox_ros_driver2
+https://github.com/Livox-SDK/livox_ros_driver2  
+
+
 
 ## How to run
+**0. add your 2D map in maps file**  
+
 **1. run livox ros driver2**
 
 **2. run jackal_navigation.launch**
