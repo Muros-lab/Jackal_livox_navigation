@@ -1,0 +1,93 @@
+<launch>
+    <arg name="map_file" default="$(find jackal_livox_navigation)/maps/my_2d_map.yaml"/>
+    <arg name="use_sim_time" default="false"/>
+    <param name="/use_sim_time" value="$(arg use_sim_time)"/>
+    
+    <!-- Robot Description -->
+    <param name="robot_description" command="$(find xacro)/xacro $(find jackal_description)/urdf/jackal.urdf.xacro" />
+    
+    <!-- Joint State Publisher - 타임스탬프 문제 해결 -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <param name="use_gui" value="false"/>
+        <param name="rate" value="10"/>
+    </node>
+    
+    <!-- Robot State Publisher -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    
+    <!-- Map Server -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+    
+    <!-- Point Cloud to Laser Scan - 최적화 버전 -->
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" output="screen">
+        <remap from="cloud_in" to="/livox/lidar"/>
+        <remap from="scan" to="/scan"/>
+        <param name="target_frame" value="base_link"/>
+        <param name="transform_tolerance" value="0.1"/>
+        
+        <!-- 성능 최적화 설정 -->
+        <param name="min_height" value="0.0"/>
+        <param name="max_height" value="2.0"/>
+        <param name="angle_min" value="-3.14159"/>
+        <param name="angle_max" value="3.14159"/>
+        <param name="angle_increment" value="0.017453"/>  <!-- 1도 간격으로 해상도 낮춤 -->
+        <param name="scan_time" value="0.1"/>
+        <param name="range_min" value="0.3"/>
+        <param name="range_max" value="15.0"/>  <!-- 범위 축소 -->
+        <param name="use_inf" value="false"/>
+        
+        <!-- CPU 사용량 최적화 -->
+        <param name="concurrency_level" value="1"/>
+        <param name="use_point_cloud2" value="true"/>
+    </node>
+    
+    <!-- AMCL Localization -->
+    <node pkg="amcl" type="amcl" name="amcl">
+        <param name="odom_frame_id" value="odom"/>
+        <param name="base_frame_id" value="base_link"/>
+        <param name="global_frame_id" value="map"/>
+        
+        <!-- 초기 위치 설정 (NaN 문제 해결) -->
+        <param name="initial_pose_x" value="0.0"/>
+        <param name="initial_pose_y" value="0.0"/>
+        <param name="initial_pose_a" value="0.0"/>
+        
+        <!-- Transform tolerance 증가 (분산 시스템용) -->
+        <param name="transform_tolerance" value="0.5"/>
+        
+        <!-- 기존 설정 유지 -->
+        <param name="update_min_d" value="0.4"/>
+        <param name="update_min_a" value="0.5"/>
+        <param name="resample_interval" value="1"/>
+        <param name="laser_max_beams" value="30"/>
+        <param name="max_particles" value="200"/>
+        
+        <!-- 추가 안정성 설정 -->
+        <param name="min_particles" value="50"/>
+        <param name="recovery_alpha_slow" value="0.001"/>
+        <param name="recovery_alpha_fast" value="0.1"/>
+    </node>
+    
+    <!-- Move Base Navigation -->
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <rosparam file="$(find jackal_livox_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+        <rosparam file="$(find jackal_livox_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap"/>
+        <rosparam file="$(find jackal_livox_navigation)/config/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find jackal_livox_navigation)/config/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find jackal_livox_navigation)/config/base_local_planner_params.yaml" command="load" />
+        
+        <!-- Transform tolerance 대폭 증가 (분산 시스템용) -->
+        <param name="transform_tolerance" value="0.5"/>
+        <param name="planner_frequency" value="1.0"/>
+        <param name="controller_frequency" value="5.0"/>
+        <param name="planner_patience" value="10.0"/>
+        <param name="controller_patience" value="5.0"/>
+        <param name="conservative_reset_dist" value="3.0"/>
+        <param name="recovery_behavior_enabled" value="true"/>
+        <param name="clearing_rotation_allowed" value="true"/>
+        
+        <!-- Oscillation 방지 -->
+        <param name="oscillation_timeout" value="10.0"/>
+        <param name="oscillation_distance" value="0.2"/>
+    </node>
+</launch>

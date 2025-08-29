@@ -1,0 +1,11 @@
+global_costmap:
+  global_frame: map
+  robot_base_frame: base_link
+  update_frequency: 1.0     # 1초에 한 번씩 업데이트
+  publish_frequency: 0.5
+  static_map: true          # 1단계에서 만든 정적 지도를 사용
+  transform_tolerance: 0.5
+  plugins:
+    - {name: static_layer,    type: "costmap_2d::StaticLayer"}
+    - {name: obstacle_layer,  type: "costmap_2d::ObstacleLayer"}
+    - {name: inflation_layer, type: "costmap_2d::InflationLayer"}

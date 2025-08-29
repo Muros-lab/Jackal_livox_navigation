@@ -1,0 +1,19 @@
+
+# 로봇의 발자국 모양 (robot 크기에 맞게 조절 필요)
+# 순서: [앞 오른쪽], [뒤 오른쪽], [뒤 왼쪽], [앞 왼쪽]
+
+footprint: [[0.254, 0.215], [0.254, -0.215], [-0.254, -0.215], [-0.254, 0.215]]
+# 로봇이 장애물과 유지할 최소 거리 (로봇 반경 + 안전거리)
+inflation_radius: 0.3
+cost_scaling_factor: 3.0
+
+# 장애물 레이어 설정
+obstacle_layer:
+  observation_sources: pointcloud_sensor
+  pointcloud_sensor:
+    sensor_frame: base_link # Livox 센서가 부착된 프레임
+    data_type: PointCloud2
+    topic: /livox/lidar     # Livox 센서가 발행하는 PointCloud2 토픽 이름
+    marking: true           # 장애물로 표시
+    clearing: true          # 장애물이 사라지면 지도에서 지움
+    track_unknown_space: false

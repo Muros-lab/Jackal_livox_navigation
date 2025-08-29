@@ -1,0 +1,30 @@
+
+# DWA (Dynamic Window Approach) Planner 사용
+DWAPlannerROS:
+  # 로봇의 최대/최소 속도 제한
+  max_vel_x: 1.0    # 최대 직진 속도 (m/s)
+  min_vel_x: 0.1
+  max_vel_y: 0.0        # 차동 구동은 y축 속도 없음
+  min_vel_y: 0.0
+
+  max_trans_vel: 1.0    # 최대 병진 속도
+  min_trans_vel: 0.1
+  max_rot_vel: 1.0      # 최대 회전 속도 (rad/s)
+  min_rot_vel: 0.2
+
+  # 가속도 제한
+  acc_lim_x: 0.5
+  acc_lim_y: 0.0
+  acc_lim_theta: 1.5
+
+  # 목표 도달 허용 오차
+  xy_goal_tolerance: 0.10     # (meters)
+x  yaw_goal_tolerance: 0.17    # (radians)
+
+  # 경로 추종 관련 파라미터
+  path_distance_bias: 30.0    # 경로를 얼마나 잘 따라갈지
+  goal_distance_bias: 24.0    # 목표에 얼마나 가까워질지
+  occdist_scale: 0.001         # 장애물을 얼마나 회피할지
+
+  # 차동 구동 모델
+  holonomic_robot: false
