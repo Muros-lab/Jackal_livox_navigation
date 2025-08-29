@@ -22,7 +22,14 @@ jackal pacakge
 cd ~/catkin_ws/src
 git clone https://github.com/jackal/jackal.git 
 ```
-git clone 
+our jackal_livox_navigation package
+```bash
+git clone https://github.com/Muros-lab/Jackal_livox_navigation
+
+```
+install Dependencies
+'''bash
+'''
 
 ## How to run
 **0. add your 2D map in maps file**  
