@@ -7,11 +7,22 @@ Ubuntu version: Ubuntu 20.04
 ROS version: ROS noetic  
 https://wiki.ros.org/noetic/Installation/Ubuntu  
 
+Jackal package  
+https://github.com/jackal/jackal.git  
+
 **We used Livox MID-360 LiDAR sensor**  
 **must install livox ros driver**  
 https://github.com/Livox-SDK/livox_ros_driver2  
 
+## Install 
+use following commands to install the package
 
+jackal pacakge
+```bash
+cd ~/catkin_ws/src
+git clone https://github.com/jackal/jackal.git 
+```
+git clone 
 
 ## How to run
 **0. add your 2D map in maps file**  
@@ -30,5 +41,5 @@ roslaunch jackal_livox_navigation jackal_navigation.launch
 
 **3. run rviz**
 ```bash
-rosrun rviz rv
+rosrun rviz rviz
 ```
